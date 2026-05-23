@@ -4,27 +4,23 @@ import google.generativeai as genai
 from PIL import Image
 import io
 
-# =========================================
-# GEMINI API KEY
-# =========================================
+# ===================================
+# GEMINI API
+# ===================================
 
 genai.configure(
     api_key="AIzaSyAtLUwv8mNrZivCLq7eUknwaraKgwUuJ5M"
 )
 
 model = genai.GenerativeModel(
-    "gemini-1.5-flash-latest"
+    "gemini-pro-vision"
 )
 
-# =========================================
+# ===================================
 # FASTAPI APP
-# =========================================
+# ===================================
 
 app = FastAPI()
-
-# =========================================
-# CORS
-# =========================================
 
 app.add_middleware(
     CORSMiddleware,
@@ -34,20 +30,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# =========================================
-# HOME ROUTE
-# =========================================
+# ===================================
+# HOME
+# ===================================
 
 @app.get("/")
 def home():
 
     return {
-        "message": "Gemini Backend Running"
+        "message": "Gemini AI Backend Running"
     }
 
-# =========================================
+# ===================================
 # ANALYZE CROP
-# =========================================
+# ===================================
 
 @app.post("/analyze-crop")
 async def analyze_crop(file: UploadFile = File(...)):
@@ -59,16 +55,15 @@ async def analyze_crop(file: UploadFile = File(...)):
     )
 
     prompt = """
-    Analyze this crop image carefully.
+    Analyze this crop image.
 
-    Give response in this format:
-
-    Disease:
-    Confidence:
-    Symptoms:
-    Treatment:
-    Prevention:
-    Telugu Advice:
+    Give:
+    - Disease Name
+    - Confidence
+    - Symptoms
+    - Treatment
+    - Prevention
+    - Telugu Advice
 
     Keep response short and farmer friendly.
     """
