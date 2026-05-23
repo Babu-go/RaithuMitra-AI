@@ -29,7 +29,7 @@ function App() {
 
     if (!selectedFile) {
 
-      alert("Please upload an image");
+      alert("Please upload a crop image");
 
       return;
     }
@@ -66,41 +66,79 @@ function App() {
     <div
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(to bottom right, #d1fae5, #bbf7d0)",
+        background: "linear-gradient(to bottom right, #dcfce7, #bbf7d0)",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
         padding: "20px",
-        textAlign: "center"
+        fontFamily: "Arial"
       }}
     >
 
-      <h1
+      {/* Header */}
+
+      <div
         style={{
-          fontSize: "50px",
-          color: "green",
-          marginBottom: "20px"
+          textAlign: "center",
+          marginBottom: "25px"
         }}
       >
-        🚜🌾 RaithuMitra AI
-      </h1>
+
+        <h1
+          style={{
+            fontSize: "42px",
+            color: "#166534",
+            marginBottom: "10px"
+          }}
+        >
+          🚜 RaithuMitra AI
+        </h1>
+
+        <p
+          style={{
+            color: "#166534",
+            fontSize: "18px"
+          }}
+        >
+          AI-Powered Smart Farming Assistant 🌿
+        </p>
+
+      </div>
 
       {/* Upload Box */}
 
       <label
         style={{
+          width: "100%",
+          maxWidth: "340px",
           background: "white",
-          border: "2px dashed green",
+          border: "3px dashed #16a34a",
+          borderRadius: "20px",
           padding: "30px",
-          borderRadius: "15px",
+          textAlign: "center",
           cursor: "pointer",
-          marginBottom: "20px",
-          width: "300px"
+          boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
+          marginBottom: "25px"
         }}
       >
 
-        <h2>📷 Upload Crop Image</h2>
+        <h2
+          style={{
+            color: "#166534",
+            marginBottom: "10px"
+          }}
+        >
+          📷 Upload Crop Image
+        </h2>
+
+        <p
+          style={{
+            color: "gray"
+          }}
+        >
+          Tap here to choose image
+        </p>
 
         <input
           type="file"
@@ -119,10 +157,11 @@ function App() {
           src={selectedImage}
           alt="Crop"
           style={{
-            width: "300px",
-            borderRadius: "15px",
-            marginBottom: "20px",
-            boxShadow: "0 0 10px rgba(0,0,0,0.2)"
+            width: "100%",
+            maxWidth: "340px",
+            borderRadius: "20px",
+            marginBottom: "25px",
+            boxShadow: "0 10px 25px rgba(0,0,0,0.2)"
           }}
         />
 
@@ -133,31 +172,60 @@ function App() {
       <button
         onClick={analyzeCrop}
         style={{
-          padding: "15px 30px",
-          background: "linear-gradient(to right, #16a34a, #22c55e)",
-          boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
+          padding: "15px 35px",
+          background: "#16a34a",
           color: "white",
           border: "none",
-          borderRadius: "10px",
+          borderRadius: "12px",
           fontSize: "18px",
-          cursor: "pointer"
+          cursor: "pointer",
+          fontWeight: "bold",
+          boxShadow: "0 5px 15px rgba(0,0,0,0.2)"
         }}
       >
-        Analyze Crop
+        🌿 Analyze Crop
       </button>
 
-      {/* Loading Message */}
+      {/* Loading Spinner */}
 
       {
         loading && (
-          <h2
+
+          <div
             style={{
-              color: "green",
-              marginTop: "20px"
+              marginTop: "25px",
+              background: "white",
+              padding: "20px",
+              borderRadius: "18px",
+              boxShadow: "0 5px 20px rgba(0,0,0,0.15)",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "15px"
             }}
           >
-            🌿 AI is analyzing crop...
-          </h2>
+
+            <div
+              style={{
+                width: "50px",
+                height: "50px",
+                border: "5px solid #bbf7d0",
+                borderTop: "5px solid #16a34a",
+                borderRadius: "50%",
+                animation: "spin 1s linear infinite"
+              }}
+            />
+
+            <h3
+              style={{
+                color: "#166534"
+              }}
+            >
+              🌱 AI is analyzing crop...
+            </h3>
+
+          </div>
+
         )
       }
 
@@ -167,32 +235,148 @@ function App() {
 
         <div
           style={{
+            width: "100%",
+            maxWidth: "380px",
             marginTop: "30px",
-            maxWidth: "700px",
             background: "white",
-            padding: "20px",
-            borderRadius: "10px",
-            boxShadow: "0 0 10px rgba(0,0,0,0.1)"
+            padding: "25px",
+            borderRadius: "22px",
+            boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
+            border: "3px solid #16a34a"
           }}
         >
 
-          <h2>{result.result}</h2>
+          <h2
+            style={{
+              textAlign: "center",
+              color: "#166534",
+              marginBottom: "25px",
+              fontSize: "28px"
+            }}
+          >
+            🌿 Crop Analysis Report
+          </h2>
 
-          <p>
-            <strong>Treatment:</strong>
-            {" "}
-            {result.treatment}
-          </p>
+          <div style={{ marginBottom: "18px" }}>
 
-          <p>
-            <strong>Telugu:</strong>
-            {" "}
-            {result.telugu}
-          </p>
+            <h3 style={{ color: "#166534" }}>
+              Disease Detected
+            </h3>
+
+            <p
+              style={{
+                fontSize: "22px",
+                fontWeight: "bold"
+              }}
+            >
+              {result.result}
+            </p>
+
+          </div>
+
+          <div style={{ marginBottom: "18px" }}>
+
+            <h3 style={{ color: "#166534" }}>
+              📊 Confidence
+            </h3>
+
+            <p
+              style={{
+                color: "#15803d",
+                fontWeight: "bold"
+              }}
+            >
+              {result.confidence}
+            </p>
+
+          </div>
+
+          <div style={{ marginBottom: "18px" }}>
+
+            <h3 style={{ color: "#166534" }}>
+              ⚠ Symptoms
+            </h3>
+
+            <ul>
+              {
+                result.symptoms.map((item, index) => (
+                  <li key={index}>
+                    {item}
+                  </li>
+                ))
+              }
+            </ul>
+
+          </div>
+
+          <div style={{ marginBottom: "18px" }}>
+
+            <h3 style={{ color: "#166534" }}>
+              💊 Treatment
+            </h3>
+
+            <p>
+              {result.treatment}
+            </p>
+
+          </div>
+
+          <div style={{ marginBottom: "18px" }}>
+
+            <h3 style={{ color: "#166534" }}>
+              🌱 Prevention
+            </h3>
+
+            <p>
+              {result.prevention}
+            </p>
+
+          </div>
+
+          <div style={{ marginBottom: "18px" }}>
+
+            <h3 style={{ color: "#166534" }}>
+              🇮🇳 Telugu Advice
+            </h3>
+
+            <p>
+              {result.telugu}
+            </p>
+
+          </div>
+
+          <div
+            style={{
+              background: "#dcfce7",
+              padding: "12px",
+              borderRadius: "12px",
+              textAlign: "center",
+              fontWeight: "bold",
+              color: "#166534"
+            }}
+          >
+            ✅ AI Analysis Completed
+          </div>
 
         </div>
 
       )}
+
+      {/* Spinner Animation */}
+
+      <style>
+        {`
+          @keyframes spin {
+            0% {
+              transform: rotate(0deg);
+            }
+
+            100% {
+              transform: rotate(360deg);
+            }
+          }
+        `}
+      </style>
 
     </div>
   );
