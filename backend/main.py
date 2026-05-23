@@ -1,10 +1,30 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-import time
+import google.generativeai as genai
+from PIL import Image
+import io
+
+# =========================================
+# GEMINI API KEY
+# =========================================
+
+genai.configure(
+    api_key="AIzaSyAtLUwv8mNrZivCLq7eUknwaraKgwUuJ5M"
+)
+
+model = genai.GenerativeModel(
+    "gemini-1.5-flash"
+)
+
+# =========================================
+# FASTAPI APP
+# =========================================
 
 app = FastAPI()
 
-# Enable CORS
+# =========================================
+# CORS
+# =========================================
 
 app.add_middleware(
     CORSMiddleware,
@@ -14,36 +34,49 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# =========================================
+# HOME ROUTE
+# =========================================
+
 @app.get("/")
 def home():
 
     return {
-        "message": "Backend Running"
+        "message": "Gemini Backend Running"
     }
+
+# =========================================
+# ANALYZE CROP
+# =========================================
 
 @app.post("/analyze-crop")
 async def analyze_crop(file: UploadFile = File(...)):
 
-    # Fake AI processing delay
+    image_bytes = await file.read()
 
-    time.sleep(3)
+    image = Image.open(
+        io.BytesIO(image_bytes)
+    )
+
+    prompt = """
+    Analyze this crop image carefully.
+
+    Give response in this format:
+
+    Disease:
+    Confidence:
+    Symptoms:
+    Treatment:
+    Prevention:
+    Telugu Advice:
+
+    Keep response short and farmer friendly.
+    """
+
+    response = model.generate_content(
+        [prompt, image]
+    )
 
     return {
-
-        "result": "🌿 Early Blight",
-
-        "confidence": "92%",
-
-        "symptoms": [
-            "Brown circular spots on leaves",
-            "Yellowing around infected areas",
-            "Dry and damaged leaf edges"
-        ],
-
-        "treatment": "Use fungicide spray and remove infected leaves.",
-
-        "prevention": "Avoid overwatering and improve air circulation.",
-
-        "telugu": "అధికంగా నీరు పోయవద్దు మరియు పంటకు గాలి సరిగా అందేలా చూడండి."
-
+        "result": response.text
     }
