@@ -43,7 +43,7 @@ function App() {
       setLoading(true);
 
       const response = await axios.post(
-        "http://127.0.0.1:8000/analyze-crop",
+        "https://raithumitra-ai.onrender.com/analyze-crop",
         formData
       );
 
@@ -76,8 +76,6 @@ function App() {
       }}
     >
 
-      {/* Header */}
-
       <div
         style={{
           textAlign: "center",
@@ -105,8 +103,6 @@ function App() {
         </p>
 
       </div>
-
-      {/* Upload Box */}
 
       <label
         style={{
@@ -149,8 +145,6 @@ function App() {
 
       </label>
 
-      {/* Image Preview */}
-
       {selectedImage && (
 
         <img
@@ -166,8 +160,6 @@ function App() {
         />
 
       )}
-
-      {/* Analyze Button */}
 
       <button
         onClick={analyzeCrop}
@@ -185,8 +177,6 @@ function App() {
       >
         🌿 Analyze Crop
       </button>
-
-      {/* Loading Spinner */}
 
       {
         loading && (
@@ -229,8 +219,6 @@ function App() {
         )
       }
 
-      {/* Result Card */}
-
       {result && (
 
         <div
@@ -258,7 +246,6 @@ function App() {
           </h2>
 
           <div style={{ marginBottom: "18px" }}>
-
             <h3 style={{ color: "#166534" }}>
               Disease Detected
             </h3>
@@ -271,11 +258,9 @@ function App() {
             >
               {result.result}
             </p>
-
           </div>
 
           <div style={{ marginBottom: "18px" }}>
-
             <h3 style={{ color: "#166534" }}>
               📊 Confidence
             </h3>
@@ -288,11 +273,9 @@ function App() {
             >
               {result.confidence}
             </p>
-
           </div>
 
           <div style={{ marginBottom: "18px" }}>
-
             <h3 style={{ color: "#166534" }}>
               ⚠ Symptoms
             </h3>
@@ -306,11 +289,9 @@ function App() {
                 ))
               }
             </ul>
-
           </div>
 
           <div style={{ marginBottom: "18px" }}>
-
             <h3 style={{ color: "#166534" }}>
               💊 Treatment
             </h3>
@@ -318,11 +299,9 @@ function App() {
             <p>
               {result.treatment}
             </p>
-
           </div>
 
           <div style={{ marginBottom: "18px" }}>
-
             <h3 style={{ color: "#166534" }}>
               🌱 Prevention
             </h3>
@@ -330,11 +309,9 @@ function App() {
             <p>
               {result.prevention}
             </p>
-
           </div>
 
           <div style={{ marginBottom: "18px" }}>
-
             <h3 style={{ color: "#166534" }}>
               🇮🇳 Telugu Advice
             </h3>
@@ -342,7 +319,6 @@ function App() {
             <p>
               {result.telugu}
             </p>
-
           </div>
 
           <div
@@ -361,8 +337,6 @@ function App() {
         </div>
 
       )}
-
-      {/* Spinner Animation */}
 
       <style>
         {`
