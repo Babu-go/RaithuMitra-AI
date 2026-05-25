@@ -47,7 +47,7 @@ function App() {
         formData
       );
 
-      setResult(response.data.result);
+      setResult(response.data);
 
       setLoading(false);
 
@@ -230,8 +230,7 @@ function App() {
             padding: "25px",
             borderRadius: "22px",
             boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
-            border: "3px solid #16a34a",
-            whiteSpace: "pre-wrap"
+            border: "3px solid #16a34a"
           }}
         >
 
@@ -243,12 +242,97 @@ function App() {
               fontSize: "28px"
             }}
           >
-            🌿 Gemini AI Analysis
+            🌿 Crop Analysis Report
           </h2>
 
-          <p>
-            {result}
-          </p>
+          <div style={{ marginBottom: "18px" }}>
+            <h3 style={{ color: "#166534" }}>
+              Disease Detected
+            </h3>
+
+            <p
+              style={{
+                fontSize: "22px",
+                fontWeight: "bold"
+              }}
+            >
+              {result.result}
+            </p>
+          </div>
+
+          <div style={{ marginBottom: "18px" }}>
+            <h3 style={{ color: "#166534" }}>
+              📊 Confidence
+            </h3>
+
+            <p
+              style={{
+                color: "#15803d",
+                fontWeight: "bold"
+              }}
+            >
+              {result.confidence}
+            </p>
+          </div>
+
+          <div style={{ marginBottom: "18px" }}>
+            <h3 style={{ color: "#166534" }}>
+              ⚠ Symptoms
+            </h3>
+
+            <ul>
+              {
+                result.symptoms.map((item, index) => (
+                  <li key={index}>
+                    {item}
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+
+          <div style={{ marginBottom: "18px" }}>
+            <h3 style={{ color: "#166534" }}>
+              💊 Treatment
+            </h3>
+
+            <p>
+              {result.treatment}
+            </p>
+          </div>
+
+          <div style={{ marginBottom: "18px" }}>
+            <h3 style={{ color: "#166534" }}>
+              🌱 Prevention
+            </h3>
+
+            <p>
+              {result.prevention}
+            </p>
+          </div>
+
+          <div style={{ marginBottom: "18px" }}>
+            <h3 style={{ color: "#166534" }}>
+              🇮🇳 Telugu Advice
+            </h3>
+
+            <p>
+              {result.telugu}
+            </p>
+          </div>
+
+          <div
+            style={{
+              background: "#dcfce7",
+              padding: "12px",
+              borderRadius: "12px",
+              textAlign: "center",
+              fontWeight: "bold",
+              color: "#166534"
+            }}
+          >
+            ✅ AI Analysis Completed
+          </div>
 
         </div>
 
