@@ -15,7 +15,7 @@ app.add_middleware(
 # PASTE YOUR GEMINI API KEY HERE
 genai.configure(api_key="AIzaSyAyXAoaIZiWSkhpoZtuqb6aDMfmM1Bp2Ew")
 
-model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel("gemini-2.0-flash")
 
 @app.get("/")
 def home():
