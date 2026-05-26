@@ -1,358 +1,242 @@
 import { useState } from "react";
 import axios from "axios";
+import "./App.css";
 
 function App() {
 
-  const [selectedFile, setSelectedFile] = useState(null);
+  // =========================================
+  // STATES
+  // =========================================
 
-  const [selectedImage, setSelectedImage] = useState(null);
-
-  const [result, setResult] = useState("");
-
+  const [image, setImage] = useState(null);
+  const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState(null);
 
-  const handleImageChange = (event) => {
+  // =========================================
+  // HANDLE IMAGE
+  // =========================================
 
-    const file = event.target.files[0];
-
-    if (file) {
-
-      setSelectedFile(file);
-
-      setSelectedImage(
-        URL.createObjectURL(file)
-      );
-    }
+  const handleImage = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setImage(file);
+    setPreview(URL.createObjectURL(file));
+    setResult(null);
   };
 
-  const analyzeCrop = async () => {
+  // =========================================
+  // ANALYZE IMAGE
+  // =========================================
 
-    if (!selectedFile) {
+  const analyzeImage = async () => {
 
-      alert("Please upload a crop image");
-
+    if (!image) {
+      alert("Please upload a crop image first.");
       return;
     }
 
-    const formData = new FormData();
-
-    formData.append("file", selectedFile);
-
     try {
-
       setLoading(true);
+      const formData = new FormData();
+      formData.append("file", image);
 
       const response = await axios.post(
-        "https://raithumitra-ai.onrender.com/analyze-crop",
-        formData
+        "http://127.0.0.1:8000/analyze-crop",
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
 
       setResult(response.data);
 
-      setLoading(false);
-
     } catch (error) {
-
-      console.log(error);
-
+      console.error(error);
+      setResult({
+        result: "❌ Backend Error",
+        confidence: "0%",
+        symptoms: [],
+        treatment: "Unable to analyze image.",
+        prevention: "Please try again.",
+        telugu: "మళ్లీ ప్రయత్నించండి."
+      });
+    } finally {
       setLoading(false);
-
-      alert("Backend Error");
     }
   };
 
+  // =========================================
+  // CHECK IF ERROR
+  // =========================================
+
+  const isError = result && (
+    result.result.includes("❌") ||
+    result.result.includes("Error") ||
+    result.result.includes("Invalid")
+  );
+
+  // =========================================
+  // UI
+  // =========================================
+
   return (
+    <>
 
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(to bottom right, #dcfce7, #bbf7d0)",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "20px",
-        fontFamily: "Arial"
-      }}
-    >
+      {/* ── HEADER ── */}
+      <header className="header">
+        <div className="header-logo">
+          <div className="header-logo-icon">🌾</div>
+          <h1>Raithu<span>Mitra</span> AI</h1>
+        </div>
+        <div className="header-badge">AI Powered · Free · Telugu Support</div>
+      </header>
 
-      <div
-        style={{
-          textAlign: "center",
-          marginBottom: "25px"
-        }}
-      >
+      {/* ── HERO ── */}
+      <section className="hero">
+        <div className="hero-tag">🤖 Smart Crop Disease Detection</div>
+        <h2>Diagnose your crop,<br />protect your harvest.</h2>
+        <p>Upload a photo of your crop and get instant AI-powered disease analysis in English and Telugu.</p>
+      </section>
 
-        <h1
-          style={{
-            fontSize: "42px",
-            color: "#166534",
-            marginBottom: "10px"
-          }}
-        >
-          🚜 RaithuMitra AI
-        </h1>
+      {/* ── MAIN GRID ── */}
+      <main className="main-grid">
 
-        <p
-          style={{
-            color: "#166534",
-            fontSize: "18px"
-          }}
-        >
-          AI-Powered Smart Farming Assistant 🌿
-        </p>
+        {/* ── LEFT: UPLOAD ── */}
+        <div className="card">
 
-      </div>
+          <div className="card-header">
+            <div className="card-icon">📷</div>
+            <h2>Upload Crop Image</h2>
+          </div>
 
-      <label
-        style={{
-          width: "100%",
-          maxWidth: "340px",
-          background: "white",
-          border: "3px dashed #16a34a",
-          borderRadius: "20px",
-          padding: "30px",
-          textAlign: "center",
-          cursor: "pointer",
-          boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
-          marginBottom: "25px"
-        }}
-      >
-
-        <h2
-          style={{
-            color: "#166534",
-            marginBottom: "10px"
-          }}
-        >
-          📷 Upload Crop Image
-        </h2>
-
-        <p
-          style={{
-            color: "gray"
-          }}
-        >
-          Tap here to choose image
-        </p>
-
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          style={{ display: "none" }}
-        />
-
-      </label>
-
-      {selectedImage && (
-
-        <img
-          src={selectedImage}
-          alt="Crop"
-          style={{
-            width: "100%",
-            maxWidth: "340px",
-            borderRadius: "20px",
-            marginBottom: "25px",
-            boxShadow: "0 10px 25px rgba(0,0,0,0.2)"
-          }}
-        />
-
-      )}
-
-      <button
-        onClick={analyzeCrop}
-        style={{
-          padding: "15px 35px",
-          background: "#16a34a",
-          color: "white",
-          border: "none",
-          borderRadius: "12px",
-          fontSize: "18px",
-          cursor: "pointer",
-          fontWeight: "bold",
-          boxShadow: "0 5px 15px rgba(0,0,0,0.2)"
-        }}
-      >
-        🌿 Analyze Crop
-      </button>
-
-      {
-        loading && (
-
-          <div
-            style={{
-              marginTop: "25px",
-              background: "white",
-              padding: "20px",
-              borderRadius: "18px",
-              boxShadow: "0 5px 20px rgba(0,0,0,0.15)",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "15px"
-            }}
-          >
-
-            <div
-              style={{
-                width: "50px",
-                height: "50px",
-                border: "5px solid #bbf7d0",
-                borderTop: "5px solid #16a34a",
-                borderRadius: "50%",
-                animation: "spin 1s linear infinite"
-              }}
+          {/* UPLOAD ZONE */}
+          <div className="upload-zone">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImage}
             />
-
-            <h3
-              style={{
-                color: "#166534"
-              }}
-            >
-              🌱 AI is analyzing crop...
-            </h3>
-
+            <div className="upload-icon">🌿</div>
+            <p>Click or drag & drop your image</p>
+            <span>Supports JPG, PNG, WEBP</span>
           </div>
 
-        )
-      }
+          {/* IMAGE PREVIEW */}
+          {preview && (
+            <div className="preview-wrap">
+              <img src={preview} alt="Crop preview" />
+              <div className="preview-label">📸 Uploaded Image</div>
+            </div>
+          )}
 
-      {result && (
-
-        <div
-          style={{
-            width: "100%",
-            maxWidth: "380px",
-            marginTop: "30px",
-            background: "white",
-            padding: "25px",
-            borderRadius: "22px",
-            boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
-            border: "3px solid #16a34a"
-          }}
-        >
-
-          <h2
-            style={{
-              textAlign: "center",
-              color: "#166534",
-              marginBottom: "25px",
-              fontSize: "28px"
-            }}
+          {/* ANALYZE BUTTON */}
+          <button
+            className={`analyze-btn ${loading ? "loading" : ""}`}
+            onClick={analyzeImage}
+            disabled={loading}
           >
-            🌿 Crop Analysis Report
-          </h2>
-
-          <div style={{ marginBottom: "18px" }}>
-            <h3 style={{ color: "#166534" }}>
-              Disease Detected
-            </h3>
-
-            <p
-              style={{
-                fontSize: "22px",
-                fontWeight: "bold"
-              }}
-            >
-              {result.result}
-            </p>
-          </div>
-
-          <div style={{ marginBottom: "18px" }}>
-            <h3 style={{ color: "#166534" }}>
-              📊 Confidence
-            </h3>
-
-            <p
-              style={{
-                color: "#15803d",
-                fontWeight: "bold"
-              }}
-            >
-              {result.confidence}
-            </p>
-          </div>
-
-          <div style={{ marginBottom: "18px" }}>
-            <h3 style={{ color: "#166534" }}>
-              ⚠ Symptoms
-            </h3>
-
-            <ul>
-              {
-                result.symptoms.map((item, index) => (
-                  <li key={index}>
-                    {item}
-                  </li>
-                ))
-              }
-            </ul>
-          </div>
-
-          <div style={{ marginBottom: "18px" }}>
-            <h3 style={{ color: "#166534" }}>
-              💊 Treatment
-            </h3>
-
-            <p>
-              {result.treatment}
-            </p>
-          </div>
-
-          <div style={{ marginBottom: "18px" }}>
-            <h3 style={{ color: "#166534" }}>
-              🌱 Prevention
-            </h3>
-
-            <p>
-              {result.prevention}
-            </p>
-          </div>
-
-          <div style={{ marginBottom: "18px" }}>
-            <h3 style={{ color: "#166534" }}>
-              🇮🇳 Telugu Advice
-            </h3>
-
-            <p>
-              {result.telugu}
-            </p>
-          </div>
-
-          <div
-            style={{
-              background: "#dcfce7",
-              padding: "12px",
-              borderRadius: "12px",
-              textAlign: "center",
-              fontWeight: "bold",
-              color: "#166534"
-            }}
-          >
-            ✅ AI Analysis Completed
-          </div>
+            {loading ? (
+              <>
+                <div className="spinner" />
+                Analyzing your crop...
+              </>
+            ) : (
+              <>🔬 Analyze Crop</>
+            )}
+          </button>
 
         </div>
 
-      )}
+        {/* ── RIGHT: RESULTS ── */}
+        <div className="card">
 
-      <style>
-        {`
-          @keyframes spin {
-            0% {
-              transform: rotate(0deg);
-            }
+          <div className="card-header">
+            <div className="card-icon">📊</div>
+            <h2>Analysis Report</h2>
+          </div>
 
-            100% {
-              transform: rotate(360deg);
-            }
-          }
-        `}
-      </style>
+          {/* EMPTY STATE */}
+          {!result && (
+            <div className="empty-state">
+              <div className="empty-icon">🌱</div>
+              <p>Upload a crop image and click<br /><strong>Analyze Crop</strong> to see results here.</p>
+            </div>
+          )}
 
-    </div>
+          {/* ERROR STATE */}
+          {result && isError && (
+            <div className="error-box">
+              <div className="error-icon">⚠️</div>
+              <p>{result.result}</p>
+              <p style={{ marginTop: "6px", color: "#888", fontSize: "0.82rem" }}>
+                {result.treatment}
+              </p>
+              <p style={{ marginTop: "4px", color: "#888", fontSize: "0.82rem" }}>
+                {result.telugu}
+              </p>
+            </div>
+          )}
+
+          {/* SUCCESS RESULT */}
+          {result && !isError && (
+            <div className="result-wrap">
+
+              {/* DISEASE + CONFIDENCE */}
+              <div className="result-title-row">
+                <div className="result-disease">{result.result}</div>
+                <div className="confidence-badge">
+                  {result.confidence} confidence
+                </div>
+              </div>
+
+              <div className="divider" />
+
+              {/* SYMPTOMS */}
+              {result.symptoms && result.symptoms.length > 0 && (
+                <>
+                  <div className="section-label">Symptoms</div>
+                  <ul className="symptoms-list">
+                    {result.symptoms.map((item, i) => (
+                      <li key={i}>
+                        <span className="symptom-dot" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="divider" />
+                </>
+              )}
+
+              {/* TREATMENT */}
+              <div className="section-label">Treatment</div>
+              <div className="info-box" style={{ marginBottom: "1rem" }}>
+                {result.treatment}
+              </div>
+
+              {/* PREVENTION */}
+              <div className="section-label">Prevention</div>
+              <div className="info-box" style={{ marginBottom: "1rem" }}>
+                {result.prevention}
+              </div>
+
+              {/* TELUGU */}
+              <div className="section-label">🗣 Telugu Advice</div>
+              <div className="telugu-box">
+                {result.telugu}
+              </div>
+
+            </div>
+          )}
+
+        </div>
+
+      </main>
+
+      {/* ── FOOTER ── */}
+      <footer className="footer">
+        RaithuMitra AI · Built for Indian Farmers · Powered by Groq AI
+      </footer>
+
+    </>
   );
 }
 
