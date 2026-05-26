@@ -42,7 +42,7 @@ function App() {
       formData.append("file", image);
 
       const response = await axios.post(
-        "http://127.0.0.1:8000/analyze-crop",
+        "https://raithumitra-ai.onrender.com/analyze-crop",
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
